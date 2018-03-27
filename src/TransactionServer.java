@@ -7,9 +7,9 @@ import java.util.*;
 
 public class TransactionServer implements Runnable{
 	
-	public TransactionManager t_manager = new TransactionManager();
-	public AccountManager a_manager = new AccountManager();
-	public LockManager l_manager = new LockManager();
+	public static TransactionManager t_manager = new TransactionManager();
+	public static AccountManager a_manager = new AccountManager();
+	public static LockManager l_manager = new LockManager();
 	
 	@Override
 	public void run()
@@ -23,11 +23,8 @@ public class TransactionServer implements Runnable{
 			while(true)
 			{
 				// Create a new thread for every transaction that comes in
-				// Probably create a new transaction object and from there 
-				// create a transaction worker thread. 
 				t_manager.runTransaction(trans_listener.accept());
 				
-				// Atomic creation of thread on the socket accept
 			}
 		}
 		catch(Exception e)

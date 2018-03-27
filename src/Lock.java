@@ -14,6 +14,8 @@ public class Lock {
 
 	private void check_conflicts()
 	{
-		
+		// Check if anyone else holds the same lock.
+		// If so, check it's type. Read-read ok, but anything with write will cause conflict. 
+		// If there is a conflict set that conflicts exist to true 
 	}
 }
