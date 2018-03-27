@@ -40,18 +40,21 @@ public class Lock {
 	private boolean check_conflicts()
 	{	
 		//false = no conflicts
-		if(holder_ids.length == 0)
+		if(trans.locks.isEmpty())
 		{
 			return false;
 		}
 		else
 		{
-			if(/*no write locks*/)
+			for(int i = 0; i < trans.locks.size(); i++)
 			{
-				return false;
+				if(trans.locks.get(i).getType() == "WRITE")
+				{
+					return true;
+				}
 			}
+			return false;
 		}
-		return false;
 	}
 	
 	private void release()
