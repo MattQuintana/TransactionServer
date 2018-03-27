@@ -40,10 +40,17 @@ public class TransactionManager{
 		}
 	}
 	
+	// Return the list of transactions that are running
+	public List<Transaction> getTransactionList()
+	{
+		return transactions_list;
+	}
+	
 	private class TransactionWorker implements Runnable{
 		
 		private Socket transaction_socket;
 		private int t_id;
+		private Message msg; 
 		public TransactionWorker(Socket t_socket) {
 			transaction_socket = t_socket;
 			t_id = transactions_list.size();
@@ -54,7 +61,15 @@ public class TransactionManager{
 		{
 			try 
 			{
+				ObjectInputStream in_stream = new ObjectInputStream(transaction_socket.getInputStream());
+				Message msg = (Message) in_stream.readObject();
 				
+				
+			}
+			catch(Exception e)
+			{
+				System.out.println("Issue with running the TransactionWorker thread.");
+				System.out.println(e);
 			}
 			
 		}

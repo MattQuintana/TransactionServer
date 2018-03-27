@@ -24,7 +24,7 @@ public class TransactionServer implements Runnable{
 			{
 				// Create a new thread for every transaction that comes in
 				t_manager.runTransaction(trans_listener.accept());
-				
+				OpenMsg msg = new OpenMsg();
 			}
 		}
 		catch(Exception e)

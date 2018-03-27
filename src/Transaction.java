@@ -5,6 +5,7 @@ public class Transaction {
 
 	private List<String> log = new ArrayList<String>();
 	public List<Lock> locks = new ArrayList<Lock>();
+	private String type;
 	
 	private int t_id;
 	
@@ -19,12 +20,19 @@ public class Transaction {
 	
 	public void addLock()
 	{
-		
+		Lock lock = new Lock();
+		locks.add(lock);
 	}
 	
-	public void removeLock()
+	public void removeLock(Lock r_lock)
 	{
-		
+		for (Lock cur_lock : locks)
+		{
+			if (cur_lock.equals(r_lock))
+			{
+				locks.remove(cur_lock);
+			}
+		}
 	}
 	
 	public void log(String log_msg)
