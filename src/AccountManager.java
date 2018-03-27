@@ -22,7 +22,10 @@ public class AccountManager {
 		{
 			if (a.getID() == account_num)
 			{
+				String log_s = String.format("Read the balance of account %d. Has current balance of %d \n", a.getID(), a .getBalance());
+				t.log(log_s);
 				return a.getBalance();
+				
 			}
 		}
 		return -1;

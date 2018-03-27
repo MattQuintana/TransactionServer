@@ -39,11 +39,6 @@ public class Lock {
 
 	private boolean check_conflicts()
 	{
-<<<<<<< HEAD
-		// Check if anyone else holds the same lock.
-		// If so, check it's type. Read-read ok, but anything with write will cause conflict. 
-		// If there is a conflict set that conflicts exist to true 
-=======
 		
 		return false;
 	}
@@ -63,6 +58,5 @@ public class Lock {
 				holder_ids[i] = (Integer) null;
 			}
 		}
->>>>>>> 651b7674100353f83327d7a3e3443543572e8958
 	}
 }
