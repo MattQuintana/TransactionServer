@@ -1,23 +1,19 @@
 
 public class Lock {
-	boolean is_locked = false;
-	int lock_num;
+
+	private Account acc;
+	// Which transactions are holding the lock
+	private int[] holder_ids; 
+	private String lock_type;
+	private boolean exist_conflict; 
 	
-	// Might want to create a constructor that takes in an int
-	// that will serve as the lock num/ID of the lock
-	
-	public void lock()
+	public synchronized void acquire(int trans_id, String lock_type)
 	{
-		is_locked = true;
+		
 	}
-	
-	public void unlock()
+
+	private void check_conflicts()
 	{
-		is_locked = false;
-	}
-	
-	public int getLockNum()
-	{
-		return lock_num;
+		
 	}
 }
