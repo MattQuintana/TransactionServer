@@ -3,15 +3,23 @@ import java.util.*;
 public class AccountManager {
 	
 	private List<Account> accounts_available = new ArrayList<Account>();
-	// Maybe create this into a dictionary/hashmap so that we can access 
-	// account directly instead of searching through the list
+	// Use the account number as an index into the list
 	
-	private TransactionManager t_manager;
-	private LockManager l_manager;
 	
-	public void setLockManager(LockManager manager)
+	public void createAccounts(int num_accounts, int initial_balance)
 	{
-		l_manager = manager;
+		for (int i = 0; i < num_accounts; i++)
+		{
+			Account new_account = new Account(initial_balance);
+			accounts_available.add(new_account);
+		}
 	}
+	
+	public void read(int account_num, Transaction t)
+	{
+
+	}
+	
+	
 
 }

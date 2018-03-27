@@ -5,13 +5,17 @@ import java.util.*;
 
 
 
-public class TransactionServer {
+public class TransactionServer implements Runnable{
 	
 	public TransactionManager t_manager = new TransactionManager();
+	public AccountManager a_manager = new AccountManager();
+	public LockManager l_manager = new LockManager();
 	
-	public static void main()
+	@Override
+	public void run()
 	{
-		int port_num = 6978;;
+		int port_num = 6978;
+		
 		
 		try 
 		{
@@ -21,8 +25,7 @@ public class TransactionServer {
 				// Create a new thread for every transaction that comes in
 				// Probably create a new transaction object and from there 
 				// create a transaction worker thread. 
-				
-				// Alternatively just create the transaction worker from here.
+				t_manager.runTransaction(trans_listener.accept());
 				
 				// Atomic creation of thread on the socket accept
 			}
@@ -31,5 +34,12 @@ public class TransactionServer {
 		{
 			
 		}
+		
+	}
+	
+	public static void main()
+	{
+		TransactionServer t_server = new TransactionServer();
+		t_server.run();
 	}
 }
