@@ -51,6 +51,7 @@ public class TransactionManager{
 		private Socket transaction_socket;
 		private int t_id;
 		private Message msg; 
+		private Transaction t;
 		public TransactionWorker(Socket t_socket) {
 			transaction_socket = t_socket;
 			t_id = transactions_list.size();
@@ -65,6 +66,26 @@ public class TransactionManager{
 				Message msg = (Message) in_stream.readObject();
 				
 				
+				switch (msg.type)
+				{
+					case "OPEN":
+						t = new Transaction();
+						transactions_list.add(t);
+						break;
+					case "CLOSE":
+						removeTransaction(t_id);
+						break;
+					case "READ":
+						TransactionServer.a_manager.read(msg.account_id, t);
+						break;
+					case "WRITE":
+						TransactionServer.a_manager.write(msg.account_id, msg.amount, t);
+				}
+				if (msg.type == "OPEN")
+				{
+					Transaction new_transaction = new Transaction();
+					transactions_list.add(new_transaction);
+				}
 				
 				
 			}

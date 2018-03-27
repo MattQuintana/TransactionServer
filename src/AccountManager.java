@@ -31,6 +31,22 @@ public class AccountManager {
 		return -1;
 	}
 	
+	public void write(int account_num, int amount, Transaction t)
+	{
+		for(Account a: accounts_available)
+		{
+			if (a.getID() == account_num)
+			{
+				if (a.getID() == account_num)
+				{
+					String log_s = String.format("Writing to account %d, account %d", a.getID(), amount);
+					t.log(log_s);
+					a.deposit(amount);
+				}
+			}
+		}
+	}
+	
 	
 
 }
