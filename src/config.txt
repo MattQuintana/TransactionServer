@@ -1,0 +1,5 @@
+IP: 1.2.34.5.121
+ServerPort: 8080
+NumberOfTransactions: 6
+NumberOfAccounts: 12
+LockingEnabled: True
