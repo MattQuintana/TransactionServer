@@ -11,7 +11,7 @@ public class Lock {
 	
 	public synchronized void acquire(int atrans_id, String alock_type)
 	{
-		while(!check_conflicts())
+		while(check_conflicts())
 		{
 			try 
 			{
@@ -38,13 +38,19 @@ public class Lock {
 	}
 
 	private boolean check_conflicts()
-	{
-<<<<<<< HEAD
-		// Check if anyone else holds the same lock.
-		// If so, check it's type. Read-read ok, but anything with write will cause conflict. 
-		// If there is a conflict set that conflicts exist to true 
-=======
-		
+	{	
+		//false = no conflicts
+		if(holder_ids.length == 0)
+		{
+			return false;
+		}
+		else
+		{
+			if(/*no write locks*/)
+			{
+				return false;
+			}
+		}
 		return false;
 	}
 	
@@ -63,6 +69,10 @@ public class Lock {
 				holder_ids[i] = (Integer) null;
 			}
 		}
->>>>>>> 651b7674100353f83327d7a3e3443543572e8958
+	}
+	
+	public String getType()
+	{
+		return lock_type;
 	}
 }

@@ -13,7 +13,8 @@ public class LockManager {
 		locking_enabled = state;
 	}
 	
-	public void setLock(Account a, int trans_id, String lock_type)
+	@SuppressWarnings("null")
+	public void setLock(Transaction trans, int trans_id, String lock_type)
 	{
 		// If locking is enabled in the first place
 		if (locking_enabled)
@@ -21,8 +22,18 @@ public class LockManager {
 			Lock found_lock;
 			synchronized(this) 
 			{
-				
+				if(trans.locks.isEmpty())
+				{
+					found_lock = new Lock();
+					trans.locks.add(found_lock);
+					lock_list.add(found_lock);
+				}
+				else
+				{
+					found_lock = trans.locks.get(0);
+				}
 			}
+			found_lock.acquire(trans_id, lock_type);
 		}
 		
 	}
