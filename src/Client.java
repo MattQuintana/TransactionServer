@@ -5,6 +5,7 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+import java.util.Random;
 
 public class Client {
 
@@ -13,16 +14,30 @@ public class Client {
   int serverPort;
   int numTransactions;
   int numAccounts;
+  int initialBalance;
   boolean lockingEnabled;
 
   public Client(File starterFile) {
      // This constructor has one parameter, file.
     this.config = starterFile;
+
     int resultOfReadingConfig = attemptReadConfig(this.config);
     if (resultOfReadingConfig == 0) {
       System.out.println("Read config file successfully!");
     } else {
       System.out.println("Didn't read config file.");
+    }
+    for (int i = 0; i < this.numTransactions; i++) {
+      TransactionProxyServer aProxyServer = new TransactionProxyServer(this.IP, this.serverPort, this.numAccounts, this.lockingEnabled);
+
+      Random seedForRandAmount = new Random();
+      ID.amount
+      // Get random number from 0 to account balance
+      int randAmountToDrop = seedForRandAmount.nextInt(ID.amount + 1);
+
+      Random seed = new Random();
+      int randomAmount = seed.nextInt(2) + this.numTransactionst;
+      // 1 - numTransactions
     }
   }
 
@@ -47,6 +62,9 @@ public class Client {
           this.numAccounts = Integer.parseInt(details[1]);
           lineNumber++;
         } else if (lineNumber == 4) {
+          this.initialBalance = Integer.parseInt(details[1]);
+          lineNumber++;
+        } else if (lineNumber == 5) {
           this.lockingEnabled = Boolean.parseBoolean(details[1]);
           lineNumber++;
         }
@@ -62,7 +80,6 @@ public class Client {
       return 1;
     }
   }
-
 
   // How to use:
   //public static void main(String[] args) {

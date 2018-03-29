@@ -1,7 +1,7 @@
 // Who the client calls high level calls towards 
 // The proxy will then do the low level network calls
 // such as creating the sockets and sending the messages
-public class TransactionProxyServer {
+public class TransactionProxyServer extends Thread {
 
 	// Take in the high level call
 	
