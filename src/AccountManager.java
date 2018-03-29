@@ -39,17 +39,13 @@ public class AccountManager {
 		{
 			if (a.getID() == account_num)
 			{
-				if (a.getID() == account_num)
-				{
-					String log_s = String.format("Writing to account %d, amount %d", a.getID(), amount);
-					t.log(log_s);
-					a.deposit(amount);
-					log_s = String.format("For account %d new balance: %d", a.getID(), a.getBalance());
-				}
+				String log_s = String.format("Writing to account %d, amount %d", a.getID(), amount);
+				t.log(log_s);
+				a.deposit(amount);
+				log_s = String.format("For account %d new balance: %d", a.getID(), a.getBalance());
+				break;
 			}
 		}
 	}
-	
-	
 
 }

@@ -84,6 +84,7 @@ public class TransactionManager{
 							open_t = false;
 							break;
 						case "READ":
+							System.out.println("Reading transaction");
 							TransactionServer.l_manager.setLock(t, t.getID(), "READ");
 							TransactionServer.a_manager.read(msg.account_id, t);
 							TransactionServer.l_manager.unLock(t.getID());

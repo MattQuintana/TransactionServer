@@ -26,7 +26,9 @@ public class test_runner {
 			
 			// Sending an object over the stream 
 			o_stream.writeObject(o_msg);
+			o_stream.writeObject(r_msg);
 			o_stream.writeObject(w_msg);
+			o_stream.writeObject(c_msg);
 			
 			// Closing the sockets
 			o_stream.close();
