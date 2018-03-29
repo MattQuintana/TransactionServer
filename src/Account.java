@@ -29,6 +29,11 @@ public class Account {
 		balance -= value;
 	}
 	
+	public void setID(int id)
+	{
+		account_num = id;
+	}
+	
 	public int getID()
 	{
 		return account_num;

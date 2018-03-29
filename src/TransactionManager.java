@@ -62,31 +62,40 @@ public class TransactionManager{
 		{
 			try 
 			{
+				System.out.println("In transaction worker.");
 				ObjectInputStream in_stream = new ObjectInputStream(transaction_socket.getInputStream());
-				Message msg = (Message) in_stream.readObject();
+				boolean open_t = true;
 				
-				
-				switch (msg.type)
+				while (open_t)
 				{
-					case "OPEN":
-						t = new Transaction();
-						transactions_list.add(t);
-						break;
-					case "CLOSE":
-						removeTransaction(t_id);
-						break;
-					case "READ":
-						TransactionServer.a_manager.read(msg.account_id, t);
-						break;
-					case "WRITE":
-						TransactionServer.a_manager.write(msg.account_id, msg.amount, t);
+					Message msg = (Message) in_stream.readObject();
+					switch (msg.type)
+					{
+						case "OPEN":
+							System.out.println("Opening Transaction");
+							num_transactions++;
+							t = new Transaction(num_transactions);
+							transactions_list.add(t);
+							break;
+						case "CLOSE":
+							removeTransaction(t_id);
+							in_stream.close();
+							transaction_socket.close();
+							open_t = false;
+							break;
+						case "READ":
+							TransactionServer.l_manager.setLock(t, t.getID(), "READ");
+							TransactionServer.a_manager.read(msg.account_id, t);
+							TransactionServer.l_manager.unLock(t.getID());
+							break;
+						case "WRITE":
+							System.out.println("Writing transaction");
+							TransactionServer.l_manager.setLock(t, t.getID(), "WRITE");
+							TransactionServer.a_manager.write(msg.account_id, msg.amount, t);
+							TransactionServer.l_manager.unLock(t.getID());
+							break;
+					}
 				}
-				if (msg.type == "OPEN")
-				{
-					Transaction new_transaction = new Transaction();
-					transactions_list.add(new_transaction);
-				}
-				
 				
 			}
 			catch(Exception e)
@@ -94,11 +103,6 @@ public class TransactionManager{
 				System.out.println("Issue with running the TransactionWorker thread.");
 				System.out.println(e);
 			}
-			
 		}
-		
-		
 	}
-	
-	
 }

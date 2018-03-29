@@ -10,12 +10,13 @@ public class TransactionServer implements Runnable{
 	public static TransactionManager t_manager = new TransactionManager();
 	public static AccountManager a_manager = new AccountManager();
 	public static LockManager l_manager = new LockManager();
+
 	
 	@Override
 	public void run()
 	{
 		int port_num = 6978;
-		
+		System.out.println(String.format("Listening on port %d", port_num));
 		
 		try 
 		{
@@ -33,9 +34,10 @@ public class TransactionServer implements Runnable{
 		
 	}
 	
-	public static void main()
+	public static void main(String[] args)
 	{
 		TransactionServer t_server = new TransactionServer();
+		l_manager.enableLocking(true);
 		t_server.run();
 	}
 }

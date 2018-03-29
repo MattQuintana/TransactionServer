@@ -11,6 +11,7 @@ public class AccountManager {
 		for (int i = 0; i < num_accounts; i++)
 		{
 			Account new_account = new Account(initial_balance);
+			new_account.setID(i);
 			accounts_available.add(new_account);
 		}
 	}
@@ -22,6 +23,7 @@ public class AccountManager {
 		{
 			if (a.getID() == account_num)
 			{
+				
 				String log_s = String.format("Read the balance of account %d. Has current balance of %d \n", a.getID(), a .getBalance());
 				t.log(log_s);
 				return a.getBalance();
@@ -39,9 +41,10 @@ public class AccountManager {
 			{
 				if (a.getID() == account_num)
 				{
-					String log_s = String.format("Writing to account %d, account %d", a.getID(), amount);
+					String log_s = String.format("Writing to account %d, amount %d", a.getID(), amount);
 					t.log(log_s);
 					a.deposit(amount);
+					log_s = String.format("For account %d new balance: %d", a.getID(), a.getBalance());
 				}
 			}
 		}

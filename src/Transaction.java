@@ -9,8 +9,8 @@ public class Transaction {
 	
 	private int t_id;
 	
-	public Transaction() {
-		
+	public Transaction(int id) {
+		t_id = id;
 	}
 	
 	public int getID()
@@ -18,10 +18,14 @@ public class Transaction {
 		return t_id;
 	}
 	
-	public void addLock()
+	public List<Lock> getLocks()
 	{
-		Lock lock = new Lock();
-		locks.add(lock);
+		return locks;
+	}
+	
+	public void addLock(Lock new_lock)
+	{
+		locks.add(new_lock);
 	}
 	
 	public void removeLock(Lock r_lock)

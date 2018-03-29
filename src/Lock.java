@@ -1,16 +1,18 @@
 import java.util.stream.IntStream;
+import java.util.*;
 
 public class Lock {
 
 	private Transaction trans;
 	// Which transactions are holding the lock
-	private int[] holder_ids; 
+	private List<Integer> holder_ids; 
 	private String lock_type;
 	private boolean exist_conflict; 
-	private int trans_id;
 	
 	public synchronized void acquire(int atrans_id, String alock_type)
 	{
+		trans = TransactionServer.t_manager.getTransaction(atrans_id);
+		// Check if there are any conflicts
 		while(check_conflicts())
 		{
 			try 
@@ -22,17 +24,31 @@ public class Lock {
 				System.out.println("EXCEPTION");
 			}
 		}
-		if(holder_ids.length == 0)
+		// Check if there are no hold locks on the transaction
+		// If there are no locks
+		if(holder_ids.size() == 0)
 		{
-			holder_ids[0] = atrans_id; 
-			trans_id = atrans_id;
+			// Add the id to our holders
+			holder_ids.add(atrans_id); 
 			lock_type = alock_type;
 		}
-		else if(holder_ids.length > 0) 
+		// If another account is holding onto the lock, it will share the lock
+		else if(holder_ids.size() > 0) 
 		{
-			if(!IntStream.of(holder_ids).anyMatch(x -> x == trans_id))
+			// If the holder id is not in the holder IDs 
+			if(!holder_ids.contains(atrans_id))
 			{
-				holder_ids[holder_ids.length-1] = trans_id;
+				// Add it in
+				holder_ids.add(atrans_id);
+			}
+			// If this transaction is already a holder and we need to make it a write
+			else
+			{
+				if (alock_type == "WRITE")
+				{
+					// promote the lock
+					lock_type = alock_type;
+				}
 			}
 		}
 	}
@@ -57,25 +73,33 @@ public class Lock {
 		}
 	}
 	
-	private void release()
+	public void release(int t_id)
 	{
 		boolean cleared = false;
-		for(int i = 0; i < holder_ids.length; i++)
+		for(int i = 0; i < holder_ids.size(); i++)
 		{
 			if(cleared)
 			{
-				holder_ids[i] = holder_ids[i+1];
+				holder_ids.set(i, holder_ids.get(i+1));
 			}
-			else if(holder_ids[i] == trans_id)
+			else if(holder_ids.get(i) == t_id)
 			{
 				cleared = true;
-				holder_ids[i] = (Integer) null;
+				holder_ids.set(i, (Integer) null);
 			}
 		}
+		lock_type = "NONE";
+		notifyAll();
 	}
 	
 	public String getType()
 	{
 		return lock_type;
+	}
+	
+	// Get the list of transaction ID's that are holding onto the lock
+	public List<Integer> getHolders()
+	{
+		return holder_ids;
 	}
 }
