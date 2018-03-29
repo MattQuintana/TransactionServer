@@ -27,18 +27,22 @@ public class Client {
     } else {
       System.out.println("Didn't read config file.");
     }
+    
+    // Create the random generator
+    Random rand = new Random();
     for (int i = 0; i < this.numTransactions; i++) {
-      TransactionProxyServer aProxyServer = new TransactionProxyServer(this.IP, this.serverPort, this.numAccounts, this.lockingEnabled);
-
-      Random seedForRandAmount = new Random();
-      ID.amount
-      // Get random number from 0 to account balance
-      int randAmountToDrop = seedForRandAmount.nextInt(ID.amount + 1);
-
-      Random seed = new Random();
-      int randomAmount = seed.nextInt(2) + this.numTransactionst;
-      // 1 - numTransactions
+      // Create the proxy thread to talk through to the server
+	  // Get the accounts to work with
+	  int acct_1 = rand.nextInt(numAccounts);
+      int acct_2 = rand.nextInt(numAccounts);
+      // Get random number from 0 to account balance      
+      int amount = rand.nextInt(initialBalance);
+      
+      (new Thread(new TransactionProxyServer(this.IP, this.serverPort, acct_1, acct_2, amount))).start();
+      
     }
+    
+    TransactionServer.a_manager.displayAccountsInfo();
   }
 
   public int attemptReadConfig(File file) {
@@ -81,11 +85,35 @@ public class Client {
     }
   }
 
+  // High level open to proxy
+  public void open(TransactionProxyServer tps) throws Exception
+  {
+	  tps.open();
+  }
+  
+  // High level close to proxy
+  public void close(TransactionProxyServer tps) throws Exception
+  {
+	  tps.close();
+  }
+  
+  // High level read to proxy
+  public void read(TransactionProxyServer tps, int account_num) throws Exception
+  {
+	  tps.read(account_num);
+  }
+  
+  // High level write command to proxy
+  public void write(TransactionProxyServer tps, int account_num, int amount) throws Exception
+  {
+	  tps.write(account_num, amount);
+  }
+  
   // How to use:
-  //public static void main(String[] args) {
-  //  File myFile = new File("./config.txt");
-  //  Client aClient = new Client(myFile);
-  //}
+  public static void main(String[] args) {
+    File myFile = new File("config.txt");
+    Client aClient = new Client(myFile);
+  }
 }
 
 

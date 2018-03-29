@@ -16,6 +16,25 @@ public class AccountManager {
 		}
 	}
 	
+	// Show the balances of all the accounts
+	public void displayAccountsInfo()
+	{
+		for (Account a : accounts_available)
+		{
+			System.out.println(String.format("Account %d: %d", a.getID(), a.getBalance()));
+		}
+	}
+	
+	public int getTotal()
+	{
+		int total = 0;
+		for (Account a : accounts_available)
+		{
+			total += a.getBalance();
+		}
+		return total;
+	}
+	
 	// Find the account and return it's balance
 	public int read(int account_num, Transaction t)
 	{
@@ -23,7 +42,7 @@ public class AccountManager {
 		{
 			if (a.getID() == account_num)
 			{
-				
+				TransactionServer.l_manager.setLock(t, t.getID(), "READ");
 				String log_s = String.format("Read the balance of account %d. Has current balance of %d \n", a.getID(), a .getBalance());
 				t.log(log_s);
 				return a.getBalance();
@@ -39,10 +58,12 @@ public class AccountManager {
 		{
 			if (a.getID() == account_num)
 			{
-				String log_s = String.format("Writing to account %d, amount %d", a.getID(), amount);
+				TransactionServer.l_manager.setLock(t, t.getID(), "WRITE");
+				String log_s = String.format("Writing to account %d, amount %d \n", a.getID(), amount);
 				t.log(log_s);
 				a.deposit(amount);
-				log_s = String.format("For account %d new balance: %d", a.getID(), a.getBalance());
+				log_s = String.format("For account %d new balance: %d \n", a.getID(), a.getBalance());
+				t.log(log_s);
 				break;
 			}
 		}

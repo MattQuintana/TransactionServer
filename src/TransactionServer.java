@@ -15,7 +15,7 @@ public class TransactionServer implements Runnable{
 
   public TransactionServer(File someConfigFile) {
     this.config = someConfigFile;
-    int resultOfReadingConfig = attemptReadConfig(this.someConfigFile);
+    int resultOfReadingConfig = attemptReadConfig(this.config);
     if (resultOfReadingConfig == 0) {
       System.out.println("Read config file successfully!");
     } else {
@@ -71,16 +71,17 @@ public class TransactionServer implements Runnable{
 	@Override
 	public void run()
 	{
-//		int port_num = 6978;
-		System.out.println(String.format("Listening on port %d", t_server.port_num));
+		System.out.println(String.format("Listening on port %d", serverPort));
 		
 		try 
 		{
-			ServerSocket trans_listener = new ServerSocket(t_server.port_num);
+			ServerSocket trans_listener = new ServerSocket(serverPort);
 			while(true)
 			{
 				// Create a new thread for every transaction that comes in
 				t_manager.runTransaction(trans_listener.accept());
+				//a_manager.displayAccountsInfo();
+				System.out.println("Branch Total: " + a_manager.getTotal());
 			}
 		}
 		catch(Exception e)
@@ -92,21 +93,17 @@ public class TransactionServer implements Runnable{
 	
 	public static void main(String[] args)
 	{
-<<<<<<< HEAD
-		TransactionServer t_server = new TransactionServer();
-		a_manager.createAccounts(10, 10);
-		l_manager.enableLocking(true);
-=======
-    File aConfigFile = new File("./config.txt");
-		TransactionServer t_server = new TransactionServer(aConfigFile);
-    a_manager.createAccounts(t_server.numAccounts, t_server.initialBalance)
 
-    if (t_server.enableLocking) {
-    	l_manager.enableLocking(true);
-    } else {
-      l_manager.enableLocking(false);
-    }
->>>>>>> 5b80a12bd074c5418cfddc3e0d9e398ceb614c96
+		File aConfigFile = new File("./config.txt");
+		TransactionServer t_server = new TransactionServer(aConfigFile);
+		a_manager.createAccounts(t_server.numAccounts, t_server.initialBalance);
+		a_manager.displayAccountsInfo();
+
+		if (t_server.lockingEnabled) {
+			l_manager.enableLocking(true);
+		} else {
+		  l_manager.enableLocking(false);
+		}
 		t_server.run();
 	}
 }

@@ -12,7 +12,7 @@ public class test_runner {
 			//TransactionServer.a_manager.createAccounts(10, 10);
 			
 			// Create a socket to the server 
-			Socket c_socket = new Socket("localhost", 6978);
+			Socket c_socket = new Socket("localhost", 8080);
 			// Create a stream from the socket to send the objects over
 			ObjectOutputStream o_stream = new ObjectOutputStream(c_socket.getOutputStream());
 			

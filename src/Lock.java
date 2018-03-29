@@ -7,14 +7,20 @@ public class Lock {
 	// Which transactions are holding the lock
 	private List<Integer> holder_ids = new ArrayList<Integer>(); 
 	private String lock_type;
-	private boolean exist_conflict; 
+	private boolean exist_conflict;
+	private int lock_id;
+	
+	public Lock(int id)
+	{
+		lock_id = id;
+	}
 	
 	public synchronized void acquire(int atrans_id, String alock_type)
 	{
-		System.out.println("Acquire lock");
+		// System.out.println("Acquire lock");
 		trans = TransactionServer.t_manager.getTransaction(atrans_id);
 		// Check if there are any conflicts
-		while(check_conflicts())
+		while(lock_type == "WRITE" || (alock_type == "WRITE" && lock_type == "READ"))
 		{
 			try 
 			{
@@ -57,16 +63,23 @@ public class Lock {
 	private boolean check_conflicts()
 	{	
 		//false = no conflicts
-		if(trans.locks.isEmpty())
+		if(holder_ids.isEmpty())
 		{
 			return false;
 		}
 		else
 		{
+			for (int holder_id : holder_ids)
+			{
+				
+			}
+			
 			for(int i = 0; i < trans.locks.size(); i++)
 			{
 				if(trans.locks.get(i).getType() == "WRITE")
 				{
+					String conflict = String.format("Found conflict with Lock %d", trans.locks.get(i).getID());
+					System.out.println(conflict);
 					return true;
 				}
 			}
@@ -76,46 +89,13 @@ public class Lock {
 	
 	public synchronized void release(int t_id)
 	{
-		System.out.println("Release lock");
-		boolean cleared = false;
-		for(int i = 0; i < holder_ids.size(); i++)
-		{
-			if (holder_ids.get(i) == null)
-			{
-				continue;
-			}
-			if(cleared)
-			{
-				try 
-				{
-					holder_ids.get(i+1);
-					holder_ids.set(i, holder_ids.get(i+1));
-					
-				}
-				catch(IndexOutOfBoundsException e)
-				{
-					break;
-				}
-			}
-			else if(holder_ids.get(i) == t_id)
-			{
-				cleared = true;
-				holder_ids.set(i, 0);
-				
-				try
-				{
-					holder_ids.get(i+1);
-					holder_ids.set(i, holder_ids.get(i+1));
-					
-				}
-				catch(IndexOutOfBoundsException e)
-				{
-					break;
-				}
-				
-			}
-			
-		}
+		//System.out.println("Release lock");
+		//boolean cleared = false;
+		
+		Transaction t = TransactionServer.t_manager.getTransaction(t_id);
+		int to_remove = holder_ids.indexOf(t_id);
+		holder_ids.remove(to_remove);
+		t.removeLock(this);
 		lock_type = "NONE";
 		notifyAll();
 	}
@@ -125,6 +105,10 @@ public class Lock {
 		return lock_type;
 	}
 	
+	public int getID()
+	{
+		return lock_id;
+	}
 	// Get the list of transaction ID's that are holding onto the lock
 	public List<Integer> getHolders()
 	{

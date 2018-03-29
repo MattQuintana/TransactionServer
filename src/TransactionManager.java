@@ -29,15 +29,9 @@ public class TransactionManager{
 	}
 	
 	// Remove a transaction based on its ID number
-	public void removeTransaction(int t_id) 
+	public void removeTransaction(Transaction t) 
 	{
-		for (Transaction t : transactions_list)
-		{
-			if (t.getID() == t_id)
-			{
-				transactions_list.remove(t);
-			}
-		}
+		transactions_list.remove(t);
 	}
 	
 	// Return the list of transactions that are running
@@ -62,8 +56,9 @@ public class TransactionManager{
 		{
 			try 
 			{
-				System.out.println("In transaction worker.");
+				//System.out.println("In transaction worker.");
 				ObjectInputStream in_stream = new ObjectInputStream(transaction_socket.getInputStream());
+				ObjectOutputStream out_stream = new ObjectOutputStream(transaction_socket.getOutputStream());
 				boolean open_t = true;
 				
 				while (open_t)
@@ -72,28 +67,30 @@ public class TransactionManager{
 					switch (msg.type)
 					{
 						case "OPEN":
-							System.out.println("Opening Transaction");
+							//System.out.println("Opening Transaction");
 							num_transactions++;
 							t = new Transaction(num_transactions);
+							t.log(String.format("Transaction %d created. \n", t.getID()));
 							transactions_list.add(t);
 							break;
 						case "CLOSE":
-							removeTransaction(t_id);
+							TransactionServer.l_manager.unLock(t.getID());
+							removeTransaction(t);
 							in_stream.close();
 							transaction_socket.close();
+							t.display_log();
 							open_t = false;
 							break;
 						case "READ":
-							System.out.println("Reading transaction");
-							TransactionServer.l_manager.setLock(t, t.getID(), "READ");
-							TransactionServer.a_manager.read(msg.account_id, t);
-							TransactionServer.l_manager.unLock(t.getID());
+							//System.out.println("Reading transaction");
+							int balance = TransactionServer.a_manager.read(msg.account_id, t);
+							// Write the balance back to the proxy
+							out_stream.writeObject(balance);
 							break;
 						case "WRITE":
-							System.out.println("Writing transaction");
-							TransactionServer.l_manager.setLock(t, t.getID(), "WRITE");
+							//System.out.println("Writing transaction");
 							TransactionServer.a_manager.write(msg.account_id, msg.amount, t);
-							TransactionServer.l_manager.unLock(t.getID());
+							
 							break;
 					}
 				}

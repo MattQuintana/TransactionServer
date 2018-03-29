@@ -6,6 +6,7 @@ public class LockManager {
 	// List of locks that are being used
 	private List<Lock> lock_list = new ArrayList<Lock>();
 	private boolean locking_enabled;
+	private int num_locks = 0;
 	
 	
 	public void enableLocking(boolean state)
@@ -26,9 +27,8 @@ public class LockManager {
 				if(trans.locks.isEmpty())
 				{
 					// Create a lock 
-					found_lock = new Lock();
+					found_lock = new Lock(++num_locks);
 					// and add it
-					trans.addLock(found_lock);
 					lock_list.add(found_lock);
 				}
 				else
@@ -39,6 +39,7 @@ public class LockManager {
 			}
 			// Acquire the lock
 			found_lock.acquire(trans_id, lock_type);
+			trans.addLock(found_lock);
 		}
 		
 	}
@@ -54,13 +55,10 @@ public class LockManager {
 		for (Lock l : lock_list)
 		{
 			// Check if a transaction holds that lock
-			for (int t_id : l.getHolders())
+			if (l.getHolders().contains(trans_id))
 			{
-				// If it does, remove the lock from the transaction
-				if ((Integer) t_id != null && t_id == trans_id)
-				{
-					l.release(t_id);
-				}
+				l.release(trans_id);
+				
 			}
 		}
 	}
