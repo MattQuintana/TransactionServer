@@ -11,6 +11,7 @@ public class Lock {
 	
 	public synchronized void acquire(int atrans_id, String alock_type)
 	{
+		System.out.println("Acquire lock");
 		trans = TransactionServer.t_manager.getTransaction(atrans_id);
 		// Check if there are any conflicts
 		while(check_conflicts())
@@ -73,20 +74,47 @@ public class Lock {
 		}
 	}
 	
-	public void release(int t_id)
+	public synchronized void release(int t_id)
 	{
+		System.out.println("Release lock");
 		boolean cleared = false;
 		for(int i = 0; i < holder_ids.size(); i++)
 		{
+			if (holder_ids.get(i) == null)
+			{
+				continue;
+			}
 			if(cleared)
 			{
-				holder_ids.set(i, holder_ids.get(i+1));
+				try 
+				{
+					holder_ids.get(i+1);
+					holder_ids.set(i, holder_ids.get(i+1));
+					
+				}
+				catch(IndexOutOfBoundsException e)
+				{
+					break;
+				}
 			}
 			else if(holder_ids.get(i) == t_id)
 			{
 				cleared = true;
-				holder_ids.set(i, (Integer) null);
+				holder_ids.set(i, 0);
+				
+				try
+				{
+					holder_ids.get(i+1);
+					holder_ids.set(i, holder_ids.get(i+1));
+					
+				}
+				catch(IndexOutOfBoundsException e)
+				{
+					break;
+				}
+				
 			}
+			
 		}
 		lock_type = "NONE";
 		notifyAll();

@@ -57,7 +57,7 @@ public class LockManager {
 			for (int t_id : l.getHolders())
 			{
 				// If it does, remove the lock from the transaction
-				if (t_id == trans_id)
+				if ((Integer) t_id != null && t_id == trans_id)
 				{
 					l.release(t_id);
 				}

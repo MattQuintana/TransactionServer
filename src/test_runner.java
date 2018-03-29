@@ -9,7 +9,8 @@ public class test_runner {
 		try 
 		{
 			// Create a number of accounts to test with
-			TransactionServer.a_manager.createAccounts(10, 10);
+			//TransactionServer.a_manager.createAccounts(10, 10);
+			
 			// Create a socket to the server 
 			Socket c_socket = new Socket("localhost", 6978);
 			// Create a stream from the socket to send the objects over

@@ -38,7 +38,7 @@ public class TransactionServer implements Runnable{
 	{
 		TransactionServer t_server = new TransactionServer();
 		a_manager.createAccounts(10, 10);
-		l_manager.enableLocking(false);
+		l_manager.enableLocking(true);
 		t_server.run();
 	}
 }
