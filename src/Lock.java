@@ -5,7 +5,7 @@ public class Lock {
 
 	private Transaction trans;
 	// Which transactions are holding the lock
-	private List<Integer> holder_ids; 
+	private List<Integer> holder_ids = new ArrayList<Integer>(); 
 	private String lock_type;
 	private boolean exist_conflict; 
 	
