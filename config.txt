@@ -1,6 +1,6 @@
 IP: localhost
 ServerPort: 8080
 NumberOfTransactions: 20
-NumberOfAccounts: 4
+NumberOfAccounts: 10
 InitialBalance: 10
 LockingEnabled: false

@@ -70,11 +70,12 @@ public class TransactionManager{
 							//System.out.println("Opening Transaction");
 							num_transactions++;
 							t = new Transaction(num_transactions);
-							t.log(String.format("Transaction %d created. \n", t.getID()));
+							t.log(String.format("Transaction %d opened. \n", t.getID()));
 							transactions_list.add(t);
 							break;
 						case "CLOSE":
 							TransactionServer.l_manager.unLock(t.getID());
+							t.log("Closing transaction. \n");
 							removeTransaction(t);
 							in_stream.close();
 							transaction_socket.close();

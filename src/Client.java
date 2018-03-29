@@ -38,7 +38,24 @@ public class Client {
       // Get random number from 0 to account balance      
       int amount = rand.nextInt(initialBalance);
       
-      (new Thread(new TransactionProxyServer(this.IP, this.serverPort, acct_1, acct_2, amount))).start();
+      
+      
+      TransactionProxyServer tps = new TransactionProxyServer(this.IP, this.serverPort);
+      tps.start();
+      
+      try 
+      {
+    	  open(tps);
+          read(tps, acct_1);
+          write(tps, acct_2, amount);
+          write(tps, acct_1, -amount);
+          close(tps);
+      }
+      catch(Exception e)
+      {
+    	  System.out.println(e);
+      }
+      
       
     }
     

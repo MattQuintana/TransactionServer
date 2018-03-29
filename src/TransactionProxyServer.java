@@ -6,15 +6,13 @@ import java.net.*;
 import java.io.*;
 import java.util.*;
 
-public class TransactionProxyServer implements Runnable {
+public class TransactionProxyServer extends Thread {
 
 	Socket to_server;
 	ObjectOutputStream out_stream;
 	ObjectInputStream in_stream;
 	// Take in the high level call
-	int account1;
-	int account2;
-	int amount;
+
 	
 	// Connect to the transaction server
 		// Package the high level call information into a message 
@@ -23,11 +21,8 @@ public class TransactionProxyServer implements Runnable {
 			// Maybe the Proxy should have an idea about the actual server
 		// Pass the message to it 
 	
-	public TransactionProxyServer(String ip, int port, int acct_1, int acct_2, int amount) 
+	public TransactionProxyServer(String ip, int port) 
 	{
-		account1 = acct_1;
-		account2 = acct_2;
-		this.amount = amount;
 		
 		try 
 		{
@@ -41,23 +36,6 @@ public class TransactionProxyServer implements Runnable {
 		}
 	}
 	
-	@Override
-	public void run()
-	{
-		try
-		{
-			open();
-			read(account1);
-			write(account2, amount);
-			write(account1, -amount);
-			close();
-		}
-		catch(Exception e)
-		{
-			System.out.println(e);
-		}
-		
-	}
 	
 	public void open() throws Exception
 	{
